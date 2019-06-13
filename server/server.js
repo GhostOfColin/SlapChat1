@@ -49,20 +49,23 @@ app.use(
   })
 );
 
-// Wrap the Express server
-const PORT = 4000;
+
 const ws = createServer(app);
-ws.listen(PORT, () => {
-  console.log(`Web Socket Server is now running on http://localhost:${PORT}`);
-  // Set up the WebSocket for handling GraphQL subscriptions
-  new SubscriptionServer({
-    execute,
-    subscribe,
-    schema,
-  }, {
-      server: ws,
-      path: '/subscriptions',
-    });
+
+SubscriptionServer.create({
+  execute,
+  subscribe,
+  schema,
+}, {
+    server: ws,
+    path: "/",
+});
+
+const port = process.env.PORT || 5000;
+
+ws.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+  console.log(`WebSocket listening on port ${port}`);
 });
 
 module.exports = app;
